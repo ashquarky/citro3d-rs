@@ -208,6 +208,21 @@ impl Info {
         Ok(Index(idx))
     }
 
+    pub fn add_fixed(
+        &mut self,
+        register: Register,
+    ) -> crate::Result<Index> {
+        let ret = unsafe {
+            citro3d_sys::AttrInfo_AddFixed(&mut self.0, register as _)
+        };
+
+        let Ok(idx) = ret.try_into() else {
+            return Err(crate::Error::TooManyAttributes);
+        };
+
+        Ok(Index(idx))
+    }
+
     /// Get the [`Permutation`] for a buffer with elements containing all the fields
     /// added to this `Info`. If the buffer elements do not contain all the fields
     /// or contain them in a different order than they were added to this `Info`,
