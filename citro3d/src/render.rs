@@ -13,9 +13,11 @@ use ctru::services::gspgpu::FramebufferFormat;
 use ctru_sys::{GPU_COLORBUF, GPU_DEPTHBUF};
 
 use crate::{
-    Error, Instance, RenderQueue, Result, attrib,
+    Error, Instance, RenderQueue, Result,
+    attrib::{self, Register},
     buffer::{self, Index},
     light::LightEnv,
+    math::FVec4,
     render, shader,
     texenv::{self, TexEnv},
     texture,
@@ -550,6 +552,14 @@ impl<'instance> Frame<'instance> {
     pub fn set_cull_face(&mut self, cull: render::effect::CullMode) {
         unsafe {
             citro3d_sys::C3D_CullFace(cull as u8);
+        }
+    }
+
+    /// Sets the value for a Fixed attribute loader type.
+    #[doc(alias = "C3D_FixedAttribSet")]
+    pub fn set_fixed_attrib(&mut self, register: Register, val: FVec4) {
+        unsafe {
+            citro3d_sys::C3D_FixedAttribSet(register as _, val.x(), val.y(), val.z(), val.w())
         }
     }
 }
